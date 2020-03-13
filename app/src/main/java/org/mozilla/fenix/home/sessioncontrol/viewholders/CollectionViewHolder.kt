@@ -21,6 +21,7 @@ import org.mozilla.fenix.components.description
 import org.mozilla.fenix.ext.getIconColor
 import org.mozilla.fenix.ext.increaseTapArea
 import org.mozilla.fenix.home.sessioncontrol.CollectionInteractor
+import org.mozilla.fenix.perf.StartupTimeline
 import org.mozilla.fenix.theme.ThemeManager
 
 class CollectionViewHolder(
@@ -67,12 +68,15 @@ class CollectionViewHolder(
         }
     }
 
-    fun bindSession(collection: TabCollection, expanded: Boolean, sessionHasOpenTabs: Boolean) {
+    fun bindSession(collection: TabCollection, expanded: Boolean, sessionHasOpenTabs: Boolean, isLastCollection: Boolean) {
         this.collection = collection
         this.expanded = expanded
         this.sessionHasOpenTabs = sessionHasOpenTabs
         collectionMenu.sessionHasOpenTabs = sessionHasOpenTabs
         updateCollectionUI()
+        if (isLastCollection) {
+            StartupTimeline.onCollectionsBound(this)
+        }
     }
 
     private fun updateCollectionUI() {

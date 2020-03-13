@@ -71,6 +71,7 @@ import org.mozilla.fenix.components.PrivateShortcutCreateManager
 import org.mozilla.fenix.components.StoreProvider
 import org.mozilla.fenix.components.TabCollectionStorage
 import org.mozilla.fenix.components.metrics.Event
+import org.mozilla.fenix.components.toolbar.DefaultBrowserToolbarController.Companion.ANIMATION_DELAY
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.hideToolbar
 import org.mozilla.fenix.ext.metrics
@@ -145,6 +146,9 @@ class HomeFragment : Fragment() {
     private lateinit var sessionControlInteractor: SessionControlInteractor
     private var sessionControlView: SessionControlView? = null
     private lateinit var currentMode: CurrentMode
+
+//    var topSitesFetched = false
+//    var collectionFetched = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -636,8 +640,12 @@ class HomeFragment : Fragment() {
 
     private fun subscribeToTabCollections(): Observer<List<TabCollection>> {
         return Observer<List<TabCollection>> {
-            requireComponents.core.tabCollectionStorage.cachedTabCollections = it
-            homeFragmentStore.dispatch(HomeFragmentAction.CollectionsChange(it))
+//            if (topSitesFetched) {
+                requireComponents.core.tabCollectionStorage.cachedTabCollections = it
+                sessionControlView!!.totalCollections = it.size
+                homeFragmentStore.dispatch(HomeFragmentAction.CollectionsChange(it))
+//            }
+//            collectionFetched  = true
         }.also { observer ->
             requireComponents.core.tabCollectionStorage.getCollections().observe(this, observer)
         }
@@ -645,8 +653,11 @@ class HomeFragment : Fragment() {
 
     private fun subscribeToTopSites(): Observer<List<TopSite>> {
         return Observer<List<TopSite>> { topSites ->
-            requireComponents.core.topSiteStorage.cachedTopSites = topSites
-            homeFragmentStore.dispatch(HomeFragmentAction.TopSitesChange(topSites))
+//            if(collectionFetched){
+                requireComponents.core.topSiteStorage.cachedTopSites = topSites
+                homeFragmentStore.dispatch(HomeFragmentAction.TopSitesChange(topSites))
+//            }
+//            topSitesFetched = true
         }.also { observer ->
             requireComponents.core.topSiteStorage.getTopSites().observe(this, observer)
         }

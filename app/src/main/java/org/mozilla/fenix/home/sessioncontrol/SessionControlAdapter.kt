@@ -41,6 +41,7 @@ import org.mozilla.fenix.home.sessioncontrol.viewholders.onboarding.OnboardingTh
 import org.mozilla.fenix.home.sessioncontrol.viewholders.onboarding.OnboardingToolbarPositionPickerViewHolder
 import org.mozilla.fenix.home.sessioncontrol.viewholders.onboarding.OnboardingTrackingProtectionViewHolder
 import org.mozilla.fenix.home.sessioncontrol.viewholders.onboarding.OnboardingWhatsNewViewHolder
+import org.mozilla.fenix.ext.requireComponents
 
 import mozilla.components.feature.tab.collections.Tab as ComponentTab
 
@@ -159,6 +160,11 @@ class AdapterItemDiffCallback : DiffUtil.ItemCallback<AdapterItem>() {
 class SessionControlAdapter(
     private val interactor: SessionControlInteractor
 ) : ListAdapter<AdapterItem, RecyclerView.ViewHolder>(AdapterItemDiffCallback()) {
+    private var isLastCollection = false
+    private var collectionsBinded = 0
+    var totalCollections = 0
+        get() = field
+        set(value) { field = value }
 
     // This method triggers the ComplexMethod lint error when in fact it's quite simple.
     @SuppressWarnings("ComplexMethod")
@@ -216,8 +222,12 @@ class SessionControlAdapter(
                 holder.bind(icon, header, description)
             }
             is CollectionViewHolder -> {
+                collectionsBinded++
+                if (collectionsBinded == totalCollections) {
+                    isLastCollection = true
+                }
                 val (collection, expanded, sessionHasOpenTabs) = item as AdapterItem.CollectionItem
-                holder.bindSession(collection, expanded, sessionHasOpenTabs)
+                holder.bindSession(collection, expanded, sessionHasOpenTabs, isLastCollection)
             }
             is TabInCollectionViewHolder -> {
                 val (collection, tab, isLastTab) = item as AdapterItem.TabInCollectionItem

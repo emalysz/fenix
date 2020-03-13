@@ -9,6 +9,7 @@ import android.view.View
 import androidx.core.view.doOnPreDraw
 import kotlinx.android.synthetic.main.activity_home.*
 import org.mozilla.fenix.HomeActivity
+import org.mozilla.fenix.home.sessioncontrol.viewholders.CollectionViewHolder
 import org.mozilla.fenix.home.sessioncontrol.viewholders.topsites.TopSiteItemViewHolder
 import org.mozilla.fenix.perf.StartupTimelineStateMachine.StartupDestination.APP_LINK
 import org.mozilla.fenix.perf.StartupTimelineStateMachine.StartupDestination.HOMESCREEN
@@ -26,6 +27,8 @@ class StartupReportFullyDrawn {
 
     // Ideally we'd incorporate this state into the StartupState but we're short on implementation time.
     private var isInstrumented = false
+
+    private var hasReportedViewHolder = false
 
     /**
      * Instruments "visually complete" cold startup time for app link for use with FNPRMS.
@@ -50,11 +53,37 @@ class StartupReportFullyDrawn {
     fun onTopSitesItemBound(state: StartupState, holder: TopSiteItemViewHolder) {
         if (!isInstrumented &&
                 state is StartupState.Cold && state.destination == HOMESCREEN) {
+            // isInstrumented will be set to true before CollectionsBound, so comment out for right now
+//            isInstrumented = true
+
+            // For the sake of collections testing, if this is called before we DO NOTHING
+            // **not to implement in FNPRMS
+            if (hasReportedViewHolder) {
+                //Eventually, we will want to the last thing to report fully drawn?
+
+                // Ideally we wouldn't cast to HomeActivity but we want to save implementation time.
+                holder.itemView
+//                val view = holder.itemView
+//                attachReportFullyDrawn(view.context as HomeActivity, view)
+            } else {
+                hasReportedViewHolder = true
+            }
+
+        }
+    }
+
+    fun onCollectionsBound(state: StartupState, holder: CollectionViewHolder) {
+        if (!isInstrumented &&
+            state is StartupState.Cold && state.destination == HOMESCREEN) {
             isInstrumented = true
 
+            // Eventually we want to implement logic similar to that above^
             // Ideally we wouldn't cast to HomeActivity but we want to save implementation time.
-            val view = holder.itemView
+            val view = holder.view
+//            val view = holder.itemView
             attachReportFullyDrawn(view.context as HomeActivity, view)
+            hasReportedViewHolder = true
+
         }
     }
 

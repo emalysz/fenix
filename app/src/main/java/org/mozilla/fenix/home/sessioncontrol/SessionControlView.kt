@@ -171,7 +171,12 @@ class SessionControlView(
     val view: RecyclerView = containerView as RecyclerView
 
     private val sessionControlAdapter = SessionControlAdapter(interactor)
-
+    var totalCollections = 0
+        get() = field
+        set(value) {
+            field = value
+            sessionControlAdapter.totalCollections = totalCollections
+        }
     init {
         view.apply {
             adapter = sessionControlAdapter
