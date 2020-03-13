@@ -59,7 +59,7 @@ class StartupReportFullyDrawn {
             // For the sake of collections testing, if this is called before we DO NOTHING
             // **not to implement in FNPRMS
             if (hasReportedViewHolder) {
-                //Eventually, we will want to the last thing to report fully drawn?
+                // Eventually, we will want to the last thing to report fully drawn?
 
                 // Ideally we wouldn't cast to HomeActivity but we want to save implementation time.
                 holder.itemView
@@ -68,7 +68,6 @@ class StartupReportFullyDrawn {
             } else {
                 hasReportedViewHolder = true
             }
-
         }
     }
 
@@ -83,7 +82,6 @@ class StartupReportFullyDrawn {
 //            val view = holder.itemView
             attachReportFullyDrawn(view.context as HomeActivity, view)
             hasReportedViewHolder = true
-
         }
     }
 

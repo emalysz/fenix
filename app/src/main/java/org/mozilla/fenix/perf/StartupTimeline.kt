@@ -43,7 +43,7 @@ object StartupTimeline {
     }
 
     fun onCollectionsBound(holder: CollectionViewHolder) {
-        reportFullyDrawn.onCollectionsBound(state, holder);
+        reportFullyDrawn.onCollectionsBound(state, holder)
     }
 
     private fun advanceState(startingActivity: StartupActivity) {

@@ -68,7 +68,12 @@ class CollectionViewHolder(
         }
     }
 
-    fun bindSession(collection: TabCollection, expanded: Boolean, sessionHasOpenTabs: Boolean, isLastCollection: Boolean) {
+    fun bindSession(
+        collection: TabCollection,
+        expanded: Boolean,
+        sessionHasOpenTabs: Boolean,
+        isLastCollection: Boolean
+    ) {
         this.collection = collection
         this.expanded = expanded
         this.sessionHasOpenTabs = sessionHasOpenTabs
